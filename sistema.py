@@ -2,10 +2,12 @@ print("""
 -----------------------------------------
         Bem-vindo ao nosso Banco""")
 menu = """-----------------------------------------
-        [d] - Depositar
-        [s] - Sacar
-        [e] - Exibir Extrato
-        [f] - Sair
+
+[d] - Depositar
+[s] - Sacar
+[e] - Exibir Extrato
+[f] - Sair
+
 -----------------------------------------
 Escolha a opção desejada: """
 
@@ -37,6 +39,7 @@ while True:
         input("Pressione qualquer tecla para continuar...")
 
     elif opcao == SACAR:
+
         valor = float(input("Informe o valor do saque: R$ "))
 
         saldo_insuficiente = valor > saldo
@@ -45,13 +48,18 @@ while True:
 
         if saldo_insuficiente:
             print("Não foi possível realizar o saque, saldo insuficiente.")
+
         elif valor_limite_excedido:
             print(f"Valor ultrapassa o limite de R$ {valor_limite:.2f} permitido por saque.")
+
         elif mais_de_tres_saques:
             print("Você já realizou os três saques permitidos do dia.")
+
         elif valor <= 0:
             print("Valor do saque deve ser maior que zero.")
+
         else:
+            
             saldo -= valor
             numero_saques += 1
             print(f"Saque de R$ {valor:.2f} realizado com sucesso!")
@@ -65,10 +73,10 @@ while True:
         print("""----------------------------
        Extrato do Dia
 ----------------------------""")
-        print(extrato)
+        print("Não foram realizadas movimentações." if not extrato else extrato)
         print()
         print(f"Saldo atual da conta: R$ {saldo:.2f}")
-        print()
+        print("----------------------------")
         input("Pressione qualquer tecla para continuar...")
     
     elif opcao == SAIR:
