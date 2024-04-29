@@ -21,6 +21,33 @@ SACAR = "s"
 EXIBIR_EXTRATO = "e"
 SAIR = "f"
 
+def cadastrar_cliente(cpf, nome, data_nascimento, endereco):
+    novo_cliente = {}
+    novo_cliente["cpf"] = cpf
+    novo_cliente["nome"] = nome
+    novo_cliente["data_nascimento"] = data_nascimento
+    novo_cliente["endereco"] = endereco
+
+    return novo_cliente
+
+
+def cadastrar_conta(conta, cpf):
+    nova_conta = {"agencia": "0001"}
+    nova_conta["conta"] = conta
+    nova_conta["cpf"] = cpf
+
+    return nova_conta
+
+
+def depositar(conta, valor):
+
+def sacar(conta, valor):
+
+def exibir_extrato(conta):
+
+    
+
+
 
 while True:
 
