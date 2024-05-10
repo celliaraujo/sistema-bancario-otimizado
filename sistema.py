@@ -8,8 +8,9 @@ menu = """==========================================
 [3] - Depositar
 [4] - Sacar
 [5] - Exibir Extrato
-[6] - Exibir Clientes
-[7] - Sair
+[6] - Listar Clientes
+[7] - Listar Contas
+[0] - Sair
 
 ==========================================
 Escolha a opção desejada: """
@@ -28,31 +29,70 @@ CADASTRAR_CONTA = "2"
 DEPOSITAR = "3"
 SACAR = "4"
 EXIBIR_EXTRATO = "5"
-EXIBIR_CLIENTES = "6"
-SAIR = "7"
+LISTAR_CLIENTES = "6"
+LISTAR_CONTAS = "7"
+SAIR = "0"
 
-def cadastrar_cliente(cpf, nome, data_nascimento, endereco):
+def cadastrar_cliente(clientes):   
+    cpf = False
     novo_cliente = {}
-    novo_cliente["cpf"] = cpf
-    novo_cliente["nome"] = nome
-    novo_cliente["data_nascimento"] = data_nascimento
-    novo_cliente["endereco"] = endereco
+    novo_cliente["cpf"] = input("Digite o CPF do cliente (somente números): ")
 
-    return novo_cliente
+    for cliente in clientes:
+        if cliente["cpf"] == novo_cliente["cpf"]:
+            cpf = True
+        else:
+            cpf = False
 
-def exibir_clientes():
-    print(clientes)
+    if cpf == False:
+        novo_cliente["nome"] = input("Digite o nome completo: ")
+        novo_cliente["data_nascimento"] = input("Digite a data de nascimento (dd/mm/aaaa): ")
+        novo_cliente["endereco"] = input("Digite o endereço do cliente (logradouro, nº - bairro - cidade/sigla estado): ")
+        clientes.append(novo_cliente)
+        print("Cliente cadastrado com sucesso!")
+    else:
+        print("\nCPF já consta no sistema")
+
+    print()        
+    input("Pressione qualquer tecla para continuar...")
+
+    
+
+def listar_clientes(clientes):
+
+    print("CLIENTES DO BANCO".center(100))
+    print("----------------------------------------------------------------------------------------------------")
+
+    for cliente in clientes:
+        print(f"{cliente['cpf']}\t{cliente['nome']}\t{cliente['data_nascimento']}\t{cliente['endereco']}\t")
+        
+    print("----------------------------------------------------------------------------------------------------")
+
+    print()        
+    input("Pressione qualquer tecla para continuar...")
 
 
-def cadastrar_conta(conta, cpf, deposito_inicial):
-    nova_conta = {"agencia": "0001"}
-    nova_conta["conta"] = conta
-    nova_conta["cpf"] = cpf
-    nova_conta["saldo"] = deposito_inicial
-    nova_conta["limite_saques"] = 3
-    nova_conta["limite_diario_saque"] = 500 
+def cadastrar_conta(contas, clientes):
+    nova_conta = {}
+    nova_conta["cpf"] = input("Insira o CPF para o qual deseja criar a conta: ")
 
-    return nova_conta
+    for cliente in clientes:
+        if cliente["cpf"] == nova_conta["cpf"]:
+            cliente_existe = True
+            break
+    else:
+        cliente_existe = False
+
+    if not cliente_existe:
+        print("\nO CPF não foi encontrado no banco de dados.")
+    else:
+        nova_conta["agencia"] = "0001"
+        nova_conta["conta"] = len(contas) + 1
+        contas.append(nova_conta)
+        print ("Nova conta cadastrada com sucesso!")
+
+    print()        
+    input("Pressione qualquer tecla para continuar...")
 
 
 def depositar(saldo, valor, extrato, /):
@@ -106,22 +146,49 @@ def exibir_extrato(saldo, /, *, extrato):
 
     return extrato
 
+def listar_contas(contas):
+    print("CONTAS CADASTRADAS".center(80))
+    print("--------------------------------------------------------------------------------")
+
+    for conta in contas:
+        print(f"Agência: {conta["agencia"]}\tConta: {conta["conta"]}\tCliente: {conta["cpf"]}\t".center(80))
+
+    print("--------------------------------------------------------------------------------")
+    print()
+    input("Pressione qualquer tecla para continuar...")
     
 
-
+cliente = {
+    "cpf" : "12345678985", 
+    "nome" : "André Silva Nascimento", 
+    "data_nascimento" : "25/01/1985", 
+    "endereco" : "Rua São Vicente, 65 - Cruz - Rio de Janeiro/RJ"}
+clientes.append(cliente)
+cliente = {
+    "cpf" : "25874196356", 
+    "nome" : "Carolina de Jesus", 
+    "data_nascimento" : "10/05/1991", 
+    "endereco" : "Rua Clarinete, 05 - Moema - Rio de Janeiro/RJ"}
+clientes.append(cliente)
+cliente = {
+    "cpf" : "98745632152", 
+    "nome" : "Isidoro José Cavalcante", 
+    "data_nascimento" : "30/04/1998", 
+    "endereco" : "Rua Joelma Nunes, 83 - Vila Roma - Rio de Janeiro/RJ"}
+clientes.append(cliente)
 
 while True:
 
     opcao = input(menu).lower()
     if opcao == CADASTRAR_CLIENTE:
-        cpf = input("Digite o CPF do cliente: ")
-        nome = input("Digite o nome do cliente: ")
-        data_nascimento = input("Digite a data de nascimento: ")
-        endereco = input("Digite o endereço do cliente: ")
-        clientes.append(cadastrar_cliente(cpf, nome, data_nascimento, endereco))
-        print("Cliente cadastrado com sucesso!")
-        input("Pressione qualquer tecla para continuar...")
-    if opcao == DEPOSITAR:
+
+        cadastrar_cliente(clientes)
+
+    elif opcao == CADASTRAR_CONTA:
+
+        cadastrar_conta(contas, clientes)        
+
+    elif opcao == DEPOSITAR:
         valor = float(input("Informe o valor do depósito: R$ "))
         
         saldo, extrato = depositar(saldo, valor, extrato) 
@@ -149,8 +216,11 @@ while True:
         extrato = exibir_extrato(saldo, extrato=extrato)
         
 
-    elif opcao == EXIBIR_CLIENTES:
-        exibir_clientes()
+    elif opcao == LISTAR_CLIENTES:
+        listar_clientes(clientes)
+
+    elif opcao == LISTAR_CONTAS:
+        listar_contas(contas)
     
     elif opcao == SAIR:
         break
